@@ -1,22 +1,39 @@
 from socket import *
+from Chat import getSocket, sendMsg, receiveMsg, sendThread, receiveThread
 
-serverIP = "127.0.0.1"
-port = int(input("Port to listen for connections: "))
 
-sock = socket(AF_INET, SOCK_STREAM)
-sock.bind((serverIP, port))
-listener = sock.listen(1)
+def bindSocket(sock, serverIP, port):
+    sock.bind((serverIP, port))
 
-while True:
+
+def socketListen(sock, n):
+    sock.listen(n)
+
+
+def acceptConnection(sock):
     con, senderIP = sock.accept()
     print(f"Connected to {senderIP}")
-    con.send(b"Hello there")
+    return con, senderIP
+
+
+def main():
+    serverIP = "127.0.0.1"
+    port = int(input("Port to listen for connections: "))
+
+    sock = getSocket()
+    bindSocket(sock, serverIP, port)
+    socketListen(sock, 1)
+
     while True:
-        msg = con.recv(1024)
-        if not msg:
+        con, senderIP = acceptConnection(sock)
+        try:
+            while True:
+                sendThread(con)
+                receiveMsg(con)
+        except:
+            print("Connection closed")
             break
-        print(str(msg))
-        sendMsg = bytes(input("Message: "), 'utf-8')
-        if sendMsg:
-            bMsg = bytes(sendMsg)
-            con.send(bMsg)
+
+
+if __name__ == "__main__":
+    main()
