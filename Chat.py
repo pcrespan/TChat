@@ -1,6 +1,7 @@
 from socket import *
 from threading import *
 import threading
+import sys
 
 def captureInput():
     ip = input("IP: ")
@@ -37,20 +38,26 @@ def sendMsg(sock):
 
 
 def receiveThread(sock):
-    receiveThread = threading.Thread(target=receiveMsg, args=(sock, ))
-    receiveThread.start()
+    recvThread = threading.Thread(target=receiveMsg, args=(sock, ))
+    recvThread.start()
+    return recvThread
 
 
 def main():
-    ip, port = captureInput()
-    sock = getSocket()
-    connection(ip, port, sock)
+    try:
+        ip, port = captureInput()
+        sock = getSocket()
+        connection(ip, port, sock)
 
-    # Thread to receive messages
-    receiveThread(sock)
+        # Thread to receive messages
+        recvThread = receiveThread(sock)
 
-    while True:
-        sendMsg(sock)
+        while True:
+            sendMsg(sock)
+    except:
+        recvThread.join()
+        sock.close()
+        sys.exit(0)
 
 
 if __name__ == "__main__":

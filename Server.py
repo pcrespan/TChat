@@ -31,7 +31,10 @@ def acceptConnection(sock):
 def clientCommunication(con):
     while True:
         msg = con.recv(1024)
-        print("recebi")
+        if len(msg) == 0:
+            print("Conexao fechou")
+            threads[con].join()
+            break
         communicateServer(msg)
 
 
