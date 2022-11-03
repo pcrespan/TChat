@@ -1,7 +1,7 @@
 from socket import *
 from threading import *
 import threading
-from Chat import getSocket, sendMsg, receiveMsg, sendThread, receiveThread
+from Chat import getSocket
 
 
 global clients
@@ -20,7 +20,7 @@ def acceptConnection(sock):
         con, senderIP = sock.accept()
         print(f"{senderIP} connected to the server")
         clients[con] = senderIP
-        threading.Thread(target=clientCommunication, args=(con, )).start()
+        threading.Thread(target=clientCommunication, args=(con, ), daemon=True).start()
         
 
 
@@ -45,7 +45,5 @@ def main():
     acceptConnection(sock)
 
     
-
-
 if __name__ == "__main__":
     main()

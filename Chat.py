@@ -36,14 +36,8 @@ def sendMsg(sock):
     sock.send(msg)
 
 
-# Runs thread on sendMsg function. Will shut down with program
-def sendThread(sock):
-    sendThread = threading.Thread(target=sendMsg, args=(sock, ), daemon=True)
-    sendThread.start()
-
-
 def receiveThread(sock):
-    receiveThread = threading.Thread(target=receiveMsg, args=(sock, ))
+    receiveThread = threading.Thread(target=receiveMsg, args=(sock, ), daemon=True)
     receiveThread.start()
 
 
