@@ -1,6 +1,11 @@
 from socket import *
+from threading import *
+import threading
 from Chat import getSocket, sendMsg, receiveMsg, sendThread, receiveThread
 
+
+global clients
+clients = {}
 
 def bindSocket(sock, serverIP, port):
     sock.bind((serverIP, port))
@@ -11,9 +16,23 @@ def socketListen(sock, n):
 
 
 def acceptConnection(sock):
-    con, senderIP = sock.accept()
-    print(f"Connected to {senderIP}")
-    return con, senderIP
+    while True:
+        con, senderIP = sock.accept()
+        print(f"{senderIP} connected to the server")
+        clients[con] = senderIP
+        threading.Thread(target=clientCommunication, args=(con, )).start()
+        
+
+
+def clientCommunication(con):
+    while True:
+        msg = con.recv(1024)
+        communicateServer(msg)
+
+
+def communicateServer(msg):
+    for client in clients:
+        client.send(msg)
 
 
 def main():
@@ -22,17 +41,10 @@ def main():
 
     sock = getSocket()
     bindSocket(sock, serverIP, port)
-    socketListen(sock, 1)
+    socketListen(sock, 2)
+    acceptConnection(sock)
 
-    while True:
-        con, senderIP = acceptConnection(sock)
-        try:
-            while True:
-                sendThread(con)
-                receiveMsg(con)
-        except:
-            print("Connection closed")
-            break
+    
 
 
 if __name__ == "__main__":

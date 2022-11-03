@@ -25,15 +25,15 @@ def connection(ip, port, sock):
 
 
 def receiveMsg(sock):
-    msg = sock.recv(1024)
-    stringMsg = str(msg)
-    return print("\n" + stringMsg)
+    while True:
+        msg = sock.recv(1024)
+        stringMsg = str(msg)
+        print("\n" + stringMsg)
 
 
 def sendMsg(sock):
-    while True:
-        msg = bytes(input("Message: "), 'utf-8')
-        sock.send(msg)
+    msg = bytes(input("Message: "), 'utf8')
+    sock.send(msg)
 
 
 # Runs thread on sendMsg function. Will shut down with program
@@ -43,8 +43,9 @@ def sendThread(sock):
 
 
 def receiveThread(sock):
-    receiveThread = threading.Thread(target=receiveMsg, args=(sock, ), daemon=True)
+    receiveThread = threading.Thread(target=receiveMsg, args=(sock, ))
     receiveThread.start()
+
 
 def main():
     ip, port = captureInput()
@@ -52,8 +53,8 @@ def main():
     connection(ip, port, sock)
 
     # Thread to receive messages
-    receiveThread()
-    
+    receiveThread(sock)
+
     while True:
         sendMsg(sock)
 
