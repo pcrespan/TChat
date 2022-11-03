@@ -31,8 +31,9 @@ def receiveMsg(sock):
 
 
 def sendMsg(sock):
-    msg = bytes(input("Message: "), 'utf-8')
-    sock.send(msg)
+    while True:
+        msg = bytes(input("Message: "), 'utf-8')
+        sock.send(msg)
 
 
 # Runs thread on sendMsg function. Will shut down with program
@@ -49,12 +50,12 @@ def main():
     ip, port = captureInput()
     sock = getSocket()
     connection(ip, port, sock)
-    try:
-        while True:
-            sendThread(sock)
-            receiveMsg(sock)
-    except:
-        print("Connection closed")
+
+    # Thread to receive messages
+    receiveThread()
+    
+    while True:
+        sendMsg(sock)
 
 
 if __name__ == "__main__":
