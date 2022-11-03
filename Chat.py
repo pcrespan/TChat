@@ -37,7 +37,7 @@ def sendMsg(sock):
 
 
 def receiveThread(sock):
-    receiveThread = threading.Thread(target=receiveMsg, args=(sock, ), daemon=True)
+    receiveThread = threading.Thread(target=receiveMsg, args=(sock, ))
     receiveThread.start()
 
 
