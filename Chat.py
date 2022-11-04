@@ -1,5 +1,4 @@
 from socket import *
-from threading import *
 import threading
 import sys
 
@@ -28,11 +27,11 @@ def connection(ip, port, sock):
 def receiveMsg(sock):
     while True:
         msg = sock.recv(1024).decode("utf8")
-        print("\n" + msg)
+        print(msg)
 
 
 def sendMsg(sock):
-    msg = bytes(input("Message: "), 'utf8')
+    msg = bytes(input("\nMessage: "), 'utf8')
     sock.send(msg)
 
 

@@ -1,5 +1,4 @@
 from socket import *
-from threading import *
 import threading
 from Chat import getSocket
 
@@ -40,16 +39,13 @@ class Server:
     def communicateServer(self, msg):
         # Add try except to remove connections
         self.connectedClients = self.clients.copy()
-        i = 0
-        for client in self.clients:
+        for index, client in enumerate(self.clients):
             try:
                 client.send(msg)
                 print("Sending message...")
-                i += 1
             except:
                 print("A client has disconnected")
-                self.connectedClients.pop(i)
-                i += 1
+                self.connectedClients.pop(index)
                 continue 
         self.clients = self.connectedClients
 
