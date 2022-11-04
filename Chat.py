@@ -27,9 +27,8 @@ def connection(ip, port, sock):
 
 def receiveMsg(sock):
     while True:
-        msg = sock.recv(1024)
-        stringMsg = str(msg)
-        print("\n" + stringMsg)
+        msg = sock.recv(1024).decode("utf8")
+        print("\n" + msg)
 
 
 def sendMsg(sock):
