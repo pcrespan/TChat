@@ -37,10 +37,9 @@ class Server:
             self.communicateServer(msg)
 
 
-    # The try except is not allowing for to continue
     def communicateServer(self, msg):
         # Add try except to remove connections
-        self.connectedClients = self.clients
+        self.connectedClients = self.clients.copy()
         i = 0
         for client in self.clients:
             try:
@@ -48,11 +47,10 @@ class Server:
                 print("Sending message...")
                 i += 1
             except:
-                # Maybe add i+=1 here
                 print("A client has disconnected")
                 self.connectedClients.pop(i)
                 i += 1
-                pass
+                continue 
         self.clients = self.connectedClients
 
 
@@ -60,7 +58,6 @@ def main():
     serverIP = "127.0.0.1"
     port = int(input("Port to listen for connections: "))
     server = Server()
-    sock = getSocket()
     server.bindSocket(serverIP, port)
     server.socketListen(1)
     server.acceptConnection()
