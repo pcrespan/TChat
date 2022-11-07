@@ -26,6 +26,9 @@ class Server:
             
 
     def clientCommunication(self, con):
+        user = con.recv(1024).decode("utf8")
+        formattedUser = (user + ": ").encode("utf8")
+
         while True:
             # Returns empty messages if connection is closed
             msg = con.recv(1024)
@@ -33,7 +36,7 @@ class Server:
             if len(msg) == 0:
                 print("Connection closed")
                 break
-            self.communicateServer(msg)
+            self.communicateServer(formattedUser + msg)
 
 
     def communicateServer(self, msg):
