@@ -31,7 +31,7 @@ def receiveMsg(sock):
 
 
 def sendMsg(sock):
-    msg = bytes(input("\nMessage: "), 'utf8')
+    msg = bytes(input(""), 'utf8')
     sock.send(msg)
 
 
