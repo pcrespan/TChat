@@ -41,6 +41,15 @@ def receiveThread(sock):
     return recvThread
 
 
+def getUsername(sock):
+    username = ""
+    while username == "":
+        username = input("Username: ").strip()
+    print(f"Welcome to the server, {username}")
+    username = bytes(username, "utf8")
+    sock.send(username)
+
+
 def main():
     try:
         ip, port = captureInput()
@@ -50,6 +59,9 @@ def main():
         # Thread to receive messages
         recvThread = receiveThread(sock)
 
+        # Choose username
+        getUsername(sock)
+    
         while True:
             sendMsg(sock)
     except:
