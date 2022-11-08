@@ -58,7 +58,7 @@ def main():
     port = int(input("Port to listen for connections: "))
     server = Server()
     server.bindSocket(serverIP, port)
-    server.socketListen(1)
+    server.socketListen(2)
     server.acceptConnection()
 
     
