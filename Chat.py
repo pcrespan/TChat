@@ -18,7 +18,7 @@ def getSocket():
 def getSSLSocket(sock):
     context = SSLContext(ssl.PROTOCOL_TLS_CLIENT)
     context.verify_mode = ssl.CERT_REQUIRED
-    context.load_verify_locations("./Test_cert/chat.crt")
+    context.load_verify_locations(capath="./Test_cert/chat.crt")
     context.load_cert_chain(certfile="./ClientCert/client.crt", keyfile="./ClientCert/client.key")
     SSLSock = context.wrap_socket(sock, server_side=False, server_hostname="127.0.0.1")
     return SSLSock
