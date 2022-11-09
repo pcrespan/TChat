@@ -1,5 +1,5 @@
 from socket import *
-import threading
+import threading, ssl
 from Chat import getSocket
 
 
@@ -8,6 +8,16 @@ class Server:
         self.clients = []
         self.connectedClients = []
         self.sock = getSocket()
+
+
+    def getSSLSocket(self, con):
+        context = ssl.SSLContext(ssl.PROTOCOL_TLS_SERVER)
+        context.verify_mode = ssl.CERT_REQUIRED
+        context.load_verify_locations("./ClientCert/client.crt")
+        context.load_cert_chain(certfile="./Test_cert/chat.crt", keyfile="./Test_cert/chat.key")
+        SSLSock = context.wrap_socket(con, server_side=True)
+        return SSLSock
+
 
     def bindSocket(self, serverIP, port):
         self.sock.bind((serverIP, port))
@@ -20,9 +30,10 @@ class Server:
     def acceptConnection(self):
         while True:
             con, senderIP = self.sock.accept()
+            SSLSock = self.getSSLSocket(con)
             print(f"{senderIP} connected to the server")
-            self.clients.append(con)
-            threading.Thread(target=self.clientCommunication, args=(con, )).start()
+            self.clients.append(SSLSock)
+            threading.Thread(target=self.clientCommunication, args=(SSLSock, )).start()
             
 
     def clientCommunication(self, con):
@@ -58,7 +69,7 @@ def main():
     port = int(input("Port to listen for connections: "))
     server = Server()
     server.bindSocket(serverIP, port)
-    server.socketListen(1)
+    server.socketListen(2)
     server.acceptConnection()
 
     

@@ -1,5 +1,6 @@
 from socket import *
-import threading
+from ssl import SSLContext
+import threading, ssl
 import sys
 
 def captureInput():
@@ -12,6 +13,15 @@ def captureInput():
 def getSocket():
     sock = socket(AF_INET, SOCK_STREAM)
     return sock
+
+
+def getSSLSocket(sock):
+    context = SSLContext(ssl.PROTOCOL_TLS_CLIENT)
+    context.verify_mode = ssl.CERT_REQUIRED
+    context.load_verify_locations("./Test_cert/chat.crt")
+    context.load_cert_chain(certfile="./ClientCert/client.crt", keyfile="./ClientCert/client.key")
+    SSLSock = context.wrap_socket(sock, server_side=False, server_hostname="127.0.0.1")
+    return SSLSock
 
 
 def connection(ip, port, sock):
@@ -54,19 +64,20 @@ def main():
     try:
         ip, port = captureInput()
         sock = getSocket()
-        connection(ip, port, sock)
+        SSLSock = getSSLSocket(sock)
+        connection(ip, port, SSLSock)
 
         # Thread to receive messages
-        recvThread = receiveThread(sock)
+        recvThread = receiveThread(SSLSock)
 
         # Choose username
         getUsername(sock)
     
         while True:
-            sendMsg(sock)
+            sendMsg(SSLSock)
     except:
         recvThread.join()
-        sock.close()
+        SSLSock.close()
         sys.exit(0)
 
 
