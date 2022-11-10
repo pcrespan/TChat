@@ -25,13 +25,13 @@ def getSSLSocket(sock, serverHostname):
 
 
 def connection(ip, port, sock):
-    #try:
-    sock.connect((ip, port))
-    print(f"Connected with {ip}")
-    return True
-    #except:
-     #   print("Connection failed")
-      #  return False
+    try:
+        sock.connect((ip, port))
+        print(f"Connected with {ip}")
+        return True
+    except:
+        print("Connection failed")
+        return False
 
 
 def receiveMsg(sock):
