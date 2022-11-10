@@ -1,12 +1,12 @@
 from socket import *
-from ssl import SSLContext
 import threading, ssl
 import sys
 
 def captureInput():
     ip = input("IP: ")
     port = input("Open port: ")
-    return ip, int(port)
+    serverHostname = input("Server hostname: ")
+    return ip, int(port), serverHostname
 
 
 # Creating socket with TCP protocol
@@ -15,23 +15,23 @@ def getSocket():
     return sock
 
 
-def getSSLSocket(sock):
-    context = SSLContext(ssl.PROTOCOL_TLS_CLIENT)
-    context.verify_mode = ssl.CERT_REQUIRED
-    context.load_verify_locations(capath="./Test_cert/chat.crt")
+def getSSLSocket(sock, serverHostname):
+    # Authenticate server using its certificate
+    context = ssl.create_default_context(ssl.Purpose.SERVER_AUTH, cafile="./Test_cert/chat.crt")
+    # Load self certificates to identify itself to server
     context.load_cert_chain(certfile="./ClientCert/client.crt", keyfile="./ClientCert/client.key")
-    SSLSock = context.wrap_socket(sock, server_side=False, server_hostname="127.0.0.1")
+    SSLSock = context.wrap_socket(sock, server_side=False, server_hostname=serverHostname)
     return SSLSock
 
 
 def connection(ip, port, sock):
-    try:
-        sock.connect((ip, port))
-        print(f"Connected with {ip}")
-        return True
-    except:
-        print("Connection failed")
-        return False
+    #try:
+    sock.connect((ip, port))
+    print(f"Connected with {ip}")
+    return True
+    #except:
+     #   print("Connection failed")
+      #  return False
 
 
 def receiveMsg(sock):
@@ -62,16 +62,16 @@ def getUsername(sock):
 
 def main():
     try:
-        ip, port = captureInput()
+        ip, port, serverHostname = captureInput()
         sock = getSocket()
-        SSLSock = getSSLSocket(sock)
+        SSLSock = getSSLSocket(sock, serverHostname)
         connection(ip, port, SSLSock)
 
         # Thread to receive messages
         recvThread = receiveThread(SSLSock)
 
         # Choose username
-        getUsername(sock)
+        getUsername(SSLSock)
     
         while True:
             sendMsg(SSLSock)
