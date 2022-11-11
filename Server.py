@@ -34,6 +34,7 @@ class Server:
                 SSLSock = self.getSSLSocket(con)
             except Exception as e:
                 print("Connection refused: ", e)
+                con.close()
                 continue
             print(f"{senderIP} connected to the server")
             self.clients.append(SSLSock)

@@ -31,6 +31,7 @@ def connection(ip, port, sock):
         return True
     except:
         print("Connection failed")
+        sock.close()
         return False
 
 
