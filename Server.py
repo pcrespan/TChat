@@ -30,7 +30,11 @@ class Server:
     def acceptConnection(self):
         while True:
             con, senderIP = self.sock.accept()
-            SSLSock = self.getSSLSocket(con)
+            try:
+                SSLSock = self.getSSLSocket(con)
+            except Exception as e:
+                print("Connection refused: ", e)
+                continue
             print(f"{senderIP} connected to the server")
             self.clients.append(SSLSock)
             threading.Thread(target=self.clientCommunication, args=(SSLSock, )).start()
