@@ -34,11 +34,20 @@ class Server:
             print(f"{senderIP} connected to the server")
             self.clients.append(SSLSock)
             threading.Thread(target=self.clientCommunication, args=(SSLSock, )).start()
-            
+           
+
+    def alertJoin(self, user):
+        self.communicateServer(f"{user} has joined the server".encode("utf8"))
+
+
+    def alertDisconnect(self, user):
+        self.communicateServer(f"{user} has disconnected from the server".encode("utf8"))
+
 
     def clientCommunication(self, con):
         user = con.recv(1024).decode("utf8")
         formattedUser = (user + ": ").encode("utf8")
+        self.alertJoin(user)
 
         while True:
             # Returns empty messages if connection is closed
@@ -46,6 +55,7 @@ class Server:
             # Testing if message is not empty
             if len(msg) == 0:
                 print("Connection closed")
+                self.alertDisconnect(user)
                 break
             self.communicateServer(formattedUser + msg)
 
