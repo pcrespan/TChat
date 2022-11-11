@@ -37,8 +37,13 @@ def connection(ip, port, sock):
 
 def receiveMsg(sock):
     while True:
-        msg = sock.recv(1024).decode("utf8")
-        print(msg)
+        try:
+            msg = sock.recv(1024).decode("utf8")
+            print(msg)
+        except Exception as e:
+            print("An exception has occured: ", e)
+            sock.close()
+            exit()
 
 
 def sendMsg(sock):
