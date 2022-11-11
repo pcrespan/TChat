@@ -1,7 +1,7 @@
 from socket import *
 import threading, ssl
 from Chat import getSocket
-
+import pprint
 
 class Server:
     def __init__(self):
@@ -13,9 +13,11 @@ class Server:
     def getSSLSocket(self, con):
         # Authenticate client
         context = ssl.create_default_context(ssl.Purpose.CLIENT_AUTH, cafile="./ClientCert/client.crt")
+        context.verify_mode = ssl.CERT_REQUIRED
         # Server certificate identity
         context.load_cert_chain(certfile="./Test_cert/chat.crt", keyfile="./Test_cert/chat.key")
         SSLSock = context.wrap_socket(con, server_side=True)
+        pprint.pprint(SSLSock.getpeercert())
         return SSLSock
 
 
