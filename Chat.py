@@ -2,6 +2,9 @@ from socket import *
 import threading, ssl
 import sys
 
+
+# Function to gather server IP
+# port and hostname
 def captureInput():
     ip = input("IP: ")
     port = input("Open port: ")
@@ -15,26 +18,29 @@ def getSocket():
     return sock
 
 
+# Checks server certificates and returns
+# SSL socket
 def getSSLSocket(sock, serverHostname):
     # Authenticate server using its certificate
     context = ssl.create_default_context(ssl.Purpose.SERVER_AUTH, cafile="./Test_cert/chat.crt")
-    # Load self certificates to identify itself to server
+    # Load client certificates to identify itself to server
     context.load_cert_chain(certfile="./ClientCert/client.crt", keyfile="./ClientCert/client.key")
+    # Wraps socket to get a secure connection
     SSLSock = context.wrap_socket(sock, server_side=False, server_hostname=serverHostname)
     return SSLSock
 
 
+# Attempts to connect to server 
 def connection(ip, port, sock):
     try:
         sock.connect((ip, port))
         print(f"Connected with {ip}")
-        return True
-    except:
-        print("Connection failed")
+    except Exception as e:
+        print("Connection failed: ", e)
         sock.close()
-        return False
 
 
+# Receives messages from the server
 def receiveMsg(sock):
     while True:
         try:
@@ -46,17 +52,20 @@ def receiveMsg(sock):
             exit()
 
 
+# Sends message to the server
 def sendMsg(sock):
     msg = bytes(input(""), 'utf8')
     sock.send(msg)
 
 
+# Thread to run receiveMsg function
 def receiveThread(sock):
-    recvThread = threading.Thread(target=receiveMsg, args=(sock, ))
+    recvThread = threading.Thread(target=receiveMsg, args=(sock, ), daemon=True)
     recvThread.start()
     return recvThread
 
 
+# Gathers username and sends to server
 def getUsername(sock):
     username = ""
     while username == "":
@@ -68,22 +77,21 @@ def getUsername(sock):
 
 def main():
     try:
+        # Socket/connection
         ip, port, serverHostname = captureInput()
         sock = getSocket()
         SSLSock = getSSLSocket(sock, serverHostname)
         connection(ip, port, SSLSock)
 
-        # Thread to receive messages
-        recvThread = receiveThread(SSLSock)
-
-        # Choose username
+        # Messages and username
+        receiveThread(SSLSock)
         getUsername(SSLSock)
     
         while True:
             sendMsg(SSLSock)
     except:
-        recvThread.join()
-        SSLSock.close()
+        # If an exception occurs, close socket and exit
+        sock.close()
         sys.exit(0)
 
 
