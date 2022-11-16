@@ -22,7 +22,7 @@ def getSocket():
 # SSL socket
 def getSSLSocket(sock, serverHostname):
     # Authenticate server using its certificate
-    context = ssl.create_default_context(ssl.Purpose.SERVER_AUTH, cafile="./Test_cert/chat.crt")
+    context = ssl.create_default_context(ssl.Purpose.SERVER_AUTH, cafile="./ServerCert/server.crt")
     # Load client certificates to identify itself to server
     context.load_cert_chain(certfile="./ClientCert/client.crt", keyfile="./ClientCert/client.key")
     # Wraps socket to get a secure connection

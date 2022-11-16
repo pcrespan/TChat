@@ -17,7 +17,7 @@ class Server:
         context = ssl.create_default_context(ssl.Purpose.CLIENT_AUTH, cafile="./ClientCert/client.crt")
         context.verify_mode = ssl.CERT_REQUIRED
         # Server certificate identity
-        context.load_cert_chain(certfile="./Test_cert/chat.crt", keyfile="./Test_cert/chat.key")
+        context.load_cert_chain(certfile="./ServerCert/server.crt", keyfile="./ServerCert/server.key")
         SSLSock = context.wrap_socket(con, server_side=True)
         # Printing client certificate
         pprint.pprint(SSLSock.getpeercert())
