@@ -6,6 +6,8 @@ RealtimeChat is a chat app based on terminals written in Python. A server must b
 
 ## Server.py
 
+`Server.py` is the file containing the server-side of the chat. It must be opened before `Chat.py`. The user will be asked for a port number to listen for connections. After an attempt of connection, the server will either accept it if the client is known by the server, or refuse it on every other case.
+
 > 1. User is prompted for port number to listen for connections
 > 2. TCP protocol socket is created
 > 3. Socket is bound to server
@@ -18,9 +20,6 @@ RealtimeChat is a chat app based on terminals written in Python. A server must b
 > 8. Thread is created to receive messages from client
 > 9. After receiving client message, broadcast to all clients using `clientCommunication`
 > 10. If an exception occurs during `clientCommunication`, delete client that caused error from clients list and close connection
-
-
-`Server.py` is the file containing the server-side of the chat. It must be opened before `Chat.py`. The user will be asked for a port number to listen for connections. After an attempt of connection, the server will either accept it if the client is known by the server, or refuse it on every other case.
 
 ## Chat.py
 
