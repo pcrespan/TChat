@@ -76,6 +76,7 @@ class Server:
             if len(msg) == 0:
                 print("Connection closed")
                 self.alertDisconnect(user)
+                con.close()
                 break
             # Broadcasting message
             self.communicateServer(formattedUser + msg)
