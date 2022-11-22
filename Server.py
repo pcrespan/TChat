@@ -101,11 +101,12 @@ class Server:
 
 
 def main():
-    serverIP = "127.0.0.1"
+    # Server will listen to other computers on the network
+    serverIP = ""
     port = int(input("Port to listen for connections: "))
     server = Server()
     server.bindSocket(serverIP, port)
-    server.socketListen(2)
+    server.socketListen(5)
     server.acceptConnection()
 
     
