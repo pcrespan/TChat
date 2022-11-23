@@ -89,7 +89,8 @@ def main():
     
         while True:
             sendMsg(SSLSock)
-    except:
+    except Exception as e:
+        print(e)
         # If an exception occurs, close socket and exit
         sock.close()
         sys.exit(0)
