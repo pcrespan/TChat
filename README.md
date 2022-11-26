@@ -1,8 +1,8 @@
-# RealtimeChat
+# TChat
 
 ## Description
 
-RealtimeChat is a chat app based on terminals written in Python. A server must be opened for the clients to connect. It uses Python's `ssl` library, which allows for mutual authentication between the server and client, using CA certificates to create a secure connection. It also uses `threads` to run parts of the code, allowing real time message exchanging.
+TChat is a local network chat app based on terminals written in Python. It uses Python's `ssl` library, which allows for mutual authentication between the server and client, using CA certificates to create a secure connection. It also uses `threads` to run parts of the code, allowing real time message exchanging.
 
 ## Server.py
 
@@ -80,17 +80,25 @@ openssl req -newkey rsa:4096 -x509 -sha256 -days 365 -nodes -out client.crt -key
 
 ## Usage
 
+#### Server-side:
+
 Open the server locally on terminal:
 
 ```
 python Server.py
 ```
 
-Open client on another terminal:
+Select the port that will listen for connections.
+
+#### Client-side
+
+Open client on another terminal (using the client computer):
 
 ```
 python Chat.py
 ```
+
+For the server IP, use its private IP address - which can be found by using `ifconfig` (on Linux/Mac) or `ipconfig` (on Windows) on another terminal in the server. Then, you select the same port opened by the server. Finally, provide the server hostname - which is located on "Common name" on the server certificate (server.crt)
 
 ## Requirements
 
