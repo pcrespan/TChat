@@ -103,3 +103,4 @@ For the server IP, use its private IP address - which can be found by using `ifc
 ## Requirements
 
 > python 3.10.x
+> openssh
